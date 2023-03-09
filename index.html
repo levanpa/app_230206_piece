@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pieces of paper</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.sass" />
+  </head>
+  <body>
+    <div id="app" style="opacity: 0">
+      <div class="wrapper">
+        <h2 class="page-title">Enter the content</h2>
+        <div class="new-piece-area">
+          <textarea name="new-piece" id="new-piece" placeholder="">
+Changelogs:
+- New initial base
+- Many improvements and smoothness</textarea>
+          <div class="right-side">
+            <div class="expire-group">
+              <span class="name">Expire in (minutes):</span>
+              <input id="expire-value" type="number" class="value" value="10" min="1" max="60" />
+            </div>
+            <div class="password-group">
+              <span class="name">Password:</span>
+              <input id="password-value" type="text" class="value" />
+            </div>
+            <button class="create-button">Created</button>
+          </div>
+        </div>
+      </div>
+      <span class="notify-icon"></span>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

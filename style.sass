@@ -1,0 +1,151 @@
+// variables
+$font-sans: 'Open Sans', sans-serif
+
+// reset
+*
+  box-sizing: border-box
+  font-family: $font-sans
+
+input
+  border: none
+  background-image: none
+  background-color: transparent
+  -webkit-box-shadow: none
+  -moz-box-shadow: none
+  box-shadow: none
+
+input[type='number']
+  -moz-appearance: textfield
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button
+  -webkit-appearance: none
+
+.reset [type="number"]
+  -moz-appearance: spinner-textfield
+
+.reset input[type='number']::-webkit-outer-spin-button,
+.reset input[type='number']::-webkit-inner-spin-button
+  -webkit-appearance: spinner-textfield
+
+a
+  color: #000
+  text-decoration: none
+
+// common
+.hidden
+  display: none !important
+
+// style
+#app
+  transition: opacity ease-out 0.5s
+.wrapper
+  display: flex
+  flex-wrap: wrap
+  min-height: 500px
+  padding: 0 40px
+  font-weight: 400
+.page-title
+  flex: 0 1 100%
+  align-self: end
+.new-piece-area
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  align-self: start
+
+  #new-piece
+    width: 60vw
+    height: 300px
+    margin-right: 20px
+    resize: none
+    border: 2px solid #ccc
+    border-radius: 8px
+    font-size: 18px
+    &:focus
+      outline: none
+      border-color: #7b5ceb
+  .create-button
+    padding: 8px 20px
+    appearance: none
+    border: 1px solid #ccc
+    border-radius: 6px
+    font-size: 16px
+    &:hover
+      cursor: pointer
+
+.notify-icon
+  display: flex
+  justify-content: center
+  align-items: center
+  text-align: center
+  max-width: 500px
+  padding: 5px 20px
+  border-radius: 20px
+  background-color: #f4a429
+  position: fixed
+  right: 50px
+  bottom: 20px
+  opacity: 0
+  font-size: 20px
+  color: #fff
+  transition: all ease-out 0.5s
+  &.animating
+    bottom: 80px
+    opacity: 1
+
+.expire-group, .password-group
+  display: flex
+  flex-direction: column
+  gap: 5px
+  margin-bottom: 20px
+  .value
+    border: 1px solid #ccc
+    border-radius: 4px
+    padding: 10px 6px
+
+.task-wrapper
+  padding: 40px
+
+  .piece-content
+    margin-bottom: 40px
+    padding-left: 10px
+    border-left: 8px solid #ddd
+    font-size: 18px
+    word-wrap: break-word
+    white-space: pre-wrap
+    &.is-error
+      border-color: red
+  .piece-created-date
+    width: fit-content
+    padding-left: 18px
+    border-bottom: 1px solid #ccc
+    border-top: 1px solid #ccc
+    color: #333
+  .link-home
+    padding: 5px 20px
+    text-align: center
+    border-radius: 20px
+    background-color: #ffda81
+    transition: all 0.3s ease
+    &:hover
+      color: #fff
+      background-color: #f9c445
+
+.password-wrapper
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  gap: 15px
+  width: fit-content
+  padding: 30px 40px
+  .password-label
+    font-size: 20px
+  #input-password
+    width: 100%
+    padding: 6px 15px
+    border: 1px solid #ccc
+    border-radius: 4px
+  .password-button
+    padding: 4px 10px
+    cursor: pointer
