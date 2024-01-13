@@ -9,6 +9,7 @@
 - install sass and jquery
 - install typeORM (BE)
 npm install --save @nestjs/typeorm typeorm mysql2
+npm install js-md5
 
 
 
@@ -33,3 +34,4 @@ read?
 + check password
 + encrypt password
 - delete expired tasks --- cron job - run once/day
++ return to selfhost by firebase

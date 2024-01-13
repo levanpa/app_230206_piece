@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import { dbRead, dbWrite, dbSubmitPassword } from './db.js'
 import { Route } from './router.js'
+import { dbRead, dbWrite } from './firebase.js'
 let log = console.log
 
 // CONSTANTS
@@ -12,44 +12,42 @@ const createButton = $('.create-button')
 const route = new Route()
 
 
-function render(id) {
-  log('render id: ', id)
-
-  if (id < 0) {
-    log('id < 0')
+async function render(id) {
+  // log('render id: ', id)
+  if (!id) {
+    log('id is null')
     return
   }
-  dbRead(id).then((response) => {
-    if (response.ok) {
-      response.json().then((data) => {
-        afterRead(data)
-      })
-    } else { }
+
+  await dbRead(id).then((snapshot) => {
+    let data = snapshot.val()
+    afterRead(data)
   })
 
   function afterRead(data) {
-    if (data.passwordRequired) {
-      $('.password-wrapper').removeClass('hidden')
-      handlePassword(route.id)
-      return
-    }
-    if (data.error) {
-      $('.task-wrapper').removeClass('hidden')
-      $('.piece-content').addClass('is-error').text(data.message)
-      return
-    }
-    showTask(data)
-  }
+    // validate and check for errors
+    // if (data.password) {
+    //   $('.password-wrapper').removeClass('hidden')
+    //   handlePassword(route.id)
+    //   return
+    // }
+    // if (data.error) {
+    //   $('.task-wrapper').removeClass('hidden')
+    //   $('.piece-content').addClass('is-error').text(data.message)
+    //   return
+    // }
 
-  function showTask(data) {
-    $('.password-wrapper').addClass('hidden')
+    // actually show content
+    // $('.password-wrapper').addClass('hidden')
     $('.task-wrapper').removeClass('hidden')
     let content = ''
-    try {
-      content = JSON.parse(data.content)
-    } catch (error) {
-      log('unable to parse content:', error.message)
-      content = data.content
+    if (!data.deleted) {
+      try {
+        content = JSON.parse(data.content)
+      } catch (error) {
+        log('unable to parse content:', error.message)
+        content = data.content
+      }
     }
     $('.piece-content').text(content)
     $('.piece-created-date').text('Created at: ' + new Intl.DateTimeFormat('vi-VN', {
@@ -60,36 +58,38 @@ function render(id) {
       minute: 'numeric',
       second: 'numeric',
     }).format(data.created))
-  }
-
-  function handlePassword(id) {
-    $('.password-button').on('click', (event) => {
-      event.preventDefault()
-      $('.notify-icon').removeClass('animating')
-      let value = $('#input-password').val()
-      dbSubmitPassword(id, value).then((response) => {
-        if (response.ok) {
-          response.json().then((data) => {
-            afterSubmit(data, id)
-          })
-        } else { }
-      })
-    })
-
-    function afterSubmit(data) {
-      if (data.result === true) {
-        afterRead(data.item)
-      } else {
-        $('.notify-icon').text(data.message).addClass('animating')
-        $('.notify-icon').on('transitionend', (event) => {
-          setTimeout(() => {
-            $('.notify-icon').removeClass('animating')
-          }, 5000)
-        })
-      }
+    if (data.deleted) {
+      $('.piece-created-date').text($('.piece-created-date').text() + ' - deleted')
     }
-
   }
+
+  // function handlePassword(id) {
+  //   $('.password-button').on('click', (event) => {
+  //     event.preventDefault()
+  //     $('.notify-icon').removeClass('animating')
+  //     let value = $('#input-password').val()
+  //     dbSubmitPassword(id, value).then((response) => {
+  //       if (response.ok) {
+  //         response.json().then((data) => {
+  //           afterSubmit(data)
+  //         })
+  //       } else { }
+  //     })
+  //   })
+
+  //   function afterSubmit(data) {
+  //     if (data.result === true) {
+  //       afterRead(data.item)
+  //     } else {
+  //       $('.notify-icon').text(data.message).addClass('animating')
+  //       $('.notify-icon').on('transitionend', (event) => {
+  //         setTimeout(() => {
+  //           $('.notify-icon').removeClass('animating')
+  //         }, 5000)
+  //       })
+  //     }
+  //   }
+  // }
 }
 
 
@@ -100,22 +100,19 @@ function handleCreate() {
     let dbData = {
       content: JSON.stringify(contentArea.val()),
       created: Date.now(),
-      password: $('#password-value').val(),
+      // password: $('#password-value').val(),
       expire: $('#expire-value').val()
     }
-    log('dbData', dbData)
+    // log('dbData', dbData)
 
     dbWrite(dbData).then((response) => {
-      if (response.ok) {
-        response.json().then((data) => {
-          afterWrite(data)
-        })
-      } else { }
+      if (response.status === 1) {
+        afterWrite(response)
+      } else { /* todo */ }
     })
   })
 
   function afterWrite(data) {
-    contentArea.val('')
     $('.notify-icon').text(data.message).addClass('animating')
     $('.notify-icon').on('transitionend', (event) => {
       setTimeout(() => {
@@ -123,11 +120,11 @@ function handleCreate() {
       }, 5000)
     })
     if (data.status === 1) {
-      window.location.href = `${HOST_URL}id/${data.nextID}`
+      contentArea.val('')
+      window.location.href = `${HOST_URL}id/${data.id}`
     }
   }
 }
-
 
 
 $(async () => {
@@ -138,7 +135,7 @@ $(async () => {
       handleCreate()
       break
     case 'id':
-      render(route.id)
+      await render(route.id)
       break
   }
   $('#app').removeAttr('style')

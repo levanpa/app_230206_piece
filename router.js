@@ -20,7 +20,7 @@ export class Route {
     }
     switch (path) {
       case '/':
-        log('home page')
+        // log('home page')
         break
       default:
         await fetchPage(path).then(html => {
