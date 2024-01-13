@@ -31,7 +31,5 @@ read?
 + BE: routing
 + check if expired
 + check password
-- encrypt password
-- delete expired tasks --- cron job
-
-
++ encrypt password
+- delete expired tasks --- cron job - run once/day

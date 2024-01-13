@@ -1,4 +1,4 @@
-let log = (...rest) => console.log(...rest)
+let log = console.log
 
 const BACKEND_URL = 'http://localhost:3000/'
 

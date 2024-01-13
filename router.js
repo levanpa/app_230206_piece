@@ -1,6 +1,6 @@
 import $ from 'jquery'
 
-let log = (...rest) => console.log(...rest)
+let log = console.log
 
 
 export class Route {

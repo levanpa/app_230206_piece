@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import { dbRead, dbWrite, dbSubmitPassword } from './db.js'
 import { Route } from './router.js'
-let log = (...rest) => console.log(...rest)
+let log = console.log
 
 // CONSTANTS
 const HOST_URL = 'http://localhost:5173/'
