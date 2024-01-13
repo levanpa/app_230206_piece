@@ -3,7 +3,7 @@ let log = console.log
 const BACKEND_URL = 'http://localhost:3000/'
 
 async function dbRead(id) {
-  return await fetch(`${BACKEND_URL}tasks/${id}`, {
+  return await fetch(`${BACKEND_URL}id/${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -13,7 +13,7 @@ async function dbRead(id) {
 }
 
 async function dbWrite(dbData) {
-  return await fetch(`${BACKEND_URL}tasks/`, {
+  return await fetch(`${BACKEND_URL}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -23,19 +23,4 @@ async function dbWrite(dbData) {
   })
 }
 
-async function dbSubmitPassword(id, password) {
-  return await fetch(`${BACKEND_URL}tasks/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-    },
-    body: JSON.stringify({
-      type: 'submit-password',
-      id,
-      password
-    })
-  })
-}
-
-export { dbRead, dbWrite, dbSubmitPassword }
+export { dbRead, dbWrite }

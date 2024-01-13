@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { dbRead, dbWrite, dbSubmitPassword } from './db.js'
+import { dbRead, dbWrite } from './db.js'
 import { Route } from './router.js'
 let log = console.log
 
@@ -11,14 +11,12 @@ const contentArea = $('#new-piece')
 const createButton = $('.create-button')
 const route = new Route()
 
-
 function render(id) {
-  log('render id: ', id)
-
-  if (id < 0) {
-    log('id < 0')
+  if (!id) {
+    log('id is undefined')
     return
   }
+
   dbRead(id).then((response) => {
     if (response.ok) {
       response.json().then((data) => {
@@ -28,30 +26,14 @@ function render(id) {
   })
 
   function afterRead(data) {
-    if (data.passwordRequired) {
-      $('.password-wrapper').removeClass('hidden')
-      handlePassword(route.id)
-      return
-    }
-    if (data.error) {
-      $('.task-wrapper').removeClass('hidden')
-      $('.piece-content').addClass('is-error').text(data.message)
-      return
-    }
-    showTask(data)
-  }
+    // if (data.error) {
+    //   $('.task-wrapper').removeClass('hidden')
+    //   $('.piece-content').addClass('is-error').text(data.message)
+    //   return
+    // }
 
-  function showTask(data) {
-    $('.password-wrapper').addClass('hidden')
     $('.task-wrapper').removeClass('hidden')
-    let content = ''
-    try {
-      content = JSON.parse(data.content)
-    } catch (error) {
-      log('unable to parse content:', error.message)
-      content = data.content
-    }
-    $('.piece-content').text(content)
+    // todo: validate
     $('.piece-created-date').text('Created at: ' + new Intl.DateTimeFormat('vi-VN', {
       year: 'numeric',
       month: 'numeric',
@@ -60,38 +42,25 @@ function render(id) {
       minute: 'numeric',
       second: 'numeric',
     }).format(data.created))
+
+    let content = ''
+    if (!isExpired(data)) {
+      try {
+        content = JSON.parse(data.content)
+      } catch (error) {
+        log('unable to parse content:', error.message)
+        content = data.content
+      }
+    } else {
+      $('.piece-created-date').text($('.piece-created-date').text() + ' - DELETED')
+    }
+    $('.piece-content').text(content)
   }
 
-  function handlePassword(id) {
-    $('.password-button').on('click', (event) => {
-      event.preventDefault()
-      $('.notify-icon').removeClass('animating')
-      let value = $('#input-password').val()
-      dbSubmitPassword(id, value).then((response) => {
-        if (response.ok) {
-          response.json().then((data) => {
-            afterSubmit(data, id)
-          })
-        } else { }
-      })
-    })
-
-    function afterSubmit(data) {
-      if (data.result === true) {
-        afterRead(data.item)
-      } else {
-        $('.notify-icon').text(data.message).addClass('animating')
-        $('.notify-icon').on('transitionend', (event) => {
-          setTimeout(() => {
-            $('.notify-icon').removeClass('animating')
-          }, 5000)
-        })
-      }
-    }
-
+  function isExpired(data) {
+    return data.created + data.expire * 60000 < Date.now()
   }
 }
-
 
 function handleCreate() {
   createButton.on('click', (event) => {
@@ -100,14 +69,14 @@ function handleCreate() {
     let dbData = {
       content: JSON.stringify(contentArea.val()),
       created: Date.now(),
-      password: $('#password-value').val(),
       expire: $('#expire-value').val()
     }
-    log('dbData', dbData)
+    // log('dbData', dbData)
 
     dbWrite(dbData).then((response) => {
       if (response.ok) {
         response.json().then((data) => {
+          // log('after write', data)
           afterWrite(data)
         })
       } else { }
@@ -115,7 +84,6 @@ function handleCreate() {
   })
 
   function afterWrite(data) {
-    contentArea.val('')
     $('.notify-icon').text(data.message).addClass('animating')
     $('.notify-icon').on('transitionend', (event) => {
       setTimeout(() => {
@@ -123,7 +91,8 @@ function handleCreate() {
       }, 5000)
     })
     if (data.status === 1) {
-      window.location.href = `${HOST_URL}id/${data.nextID}`
+      contentArea.val('')
+      window.location.href = `${HOST_URL}id/${data.id}`
     }
   }
 }

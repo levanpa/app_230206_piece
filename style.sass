@@ -42,7 +42,6 @@ a
 .wrapper
   display: flex
   flex-wrap: wrap
-  min-height: 500px
   padding: 0 40px
   font-weight: 400
 .page-title
@@ -56,7 +55,7 @@ a
 
   #new-piece
     width: 60vw
-    height: 300px
+    height: 500px
     margin-right: 20px
     padding: 4px 10px
     resize: none
@@ -106,32 +105,30 @@ a
     padding: 10px 6px
 
 .task-wrapper
-  padding: 40px
+  width: 90vw
+  max-width: 1024px
+  margin: 40px auto 0
 
   .piece-content
     margin-bottom: 40px
     padding-left: 10px
     border-left: 8px solid #ddd
     font-size: 18px
+    text-align: justify
     word-wrap: break-word
     white-space: pre-wrap
     &.is-error
       border-color: red
-  .piece-created-date
+  .piece-created-date,
+  .piece-expire-date
     width: fit-content
-    padding-left: 18px
+    margin-bottom: 5px
     border-bottom: 1px solid #ccc
     border-top: 1px solid #ccc
     color: #333
   .link-home
-    padding: 5px 20px
     text-align: center
     border-radius: 20px
-    background-color: #ffda81
-    transition: all 0.3s ease
-    &:hover
-      color: #fff
-      background-color: #f9c445
 
 .password-wrapper
   display: flex
