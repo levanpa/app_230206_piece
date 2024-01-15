@@ -33,7 +33,6 @@ function render(id) {
     // }
 
     $('.task-wrapper').removeClass('hidden')
-    // todo: validate
     $('.piece-created-date').text('Created at: ' + new Intl.DateTimeFormat('vi-VN', {
       year: 'numeric',
       month: 'numeric',
@@ -58,7 +57,7 @@ function render(id) {
   }
 
   function isExpired(data) {
-    return data.created + data.expire * 60000 < Date.now()
+    return data.isExpired
   }
 }
 
